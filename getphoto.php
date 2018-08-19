@@ -1,3 +1,14 @@
+<?php
+
+require 'app/start.php';
+
+$objects = $s3->getIterator('ListObjects', [
+    'Bucket' => $config['s3']['bucket']
+]);
+
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,6 +61,23 @@
                     </div>
                 </fieldset>
             </form>
+            <br><br>
+            <table>
+                <thead>
+                    <tr>
+                        <th>File</th>
+                        <th>View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($objects as $object): ?> 
+                    <tr>
+                        <td><?php echo $object['Key']; ?></td>
+                        <td><a href="<?php echo $s3->getObjectUrl($config['s3']['bucket'], $object['Key']); ?>">View</td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
 
         </div>
     </div>
@@ -58,8 +86,7 @@
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="js/materialize.js"></script>
     <script src="js/init.js"></script>
-
-    
+ 
 
 </body>
 </html>
