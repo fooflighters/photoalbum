@@ -14,7 +14,7 @@
     <nav class="green darken-2">
         <div class="nav-wrapper container">
             <ul class="left">
-                <li><a href="#">Upload photo</a></li>
+                <li><a href="upload.php">Upload photo</a></li>
             </ul>
             <ul class="right">
                 <li>Phu Dao 101335460</li>
