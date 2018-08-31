@@ -29,14 +29,10 @@
             <h1 class="header center grey-text text-darken-2">Photo Uploader</h1>
             <form action="" method="post" enctype="multipart/form-data">
                 <fieldset>
-                    <div class="input-field">
-                        <label>Photo Title: </label>
-                        <input type="text" name="photo_title" pattern="[A-Za-z0-9_]{1,30}" title="must only contain alpha characters, underscores, or numbers" />
-                    </div>
                     <div class="file-field input-field">
                         <div class="btn grey darken-2">
                             <span>File</span>
-                            <input type="file" name="file" />
+                            <input type="file" name="file" required="required" />
                         </div>
                         <div class="file-path-wrapper">
                             <input class="file-path validate" type="text" placeholder="Select a photo">
@@ -71,15 +67,102 @@
 use Aws\S3\Exception\S3Exception;
 
 require 'app/start.php';
+require_once 'app/database_settings.php';
+
+$photo_url = "https://s3-ap-southeast-2.amazonaws.com/prescriptionprogrammer/"; //this is url of the s3 bucket
+
+//connect to mysql database
+$conn = @mysqli_connect($host,
+        $user,
+        $pwd,
+        $sql_db
+    );
+if (!$conn) {
+    echo "Error connecting to MySQL";
+    echo "Debugging errno: ". mysqli_connect_errno();
+    echo "Debbuging error: ". mysqli_connect_error();
+}
+
+/*
+* Creates the table customers in the database if one does not already exist
+*/
+function createTable() {
+    global $conn;
+    if (!$conn) {
+        echo "<p>Database connection failure</p>";
+    } else {
+        $sql_table = "photo_album";
+        $query = "CREATE TABLE IF NOT EXISTS $sql_table (
+                    photo_id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    photo_name          VARCHAR(50) NOT NULL,
+                    photo_description   VARCHAR(255),
+                    photo_date          DATE,
+                    keywords            VARCHAR(255),
+                    photo_url           VARCHAR(255)
+                )";
+        $result = mysqli_query($conn, $query);
+        if (!$result) {
+            echo "<p>There was an error with the query</p>";
+        }
+    }       
+}
+
+function saveData($name, $description, $date, $keywords, $photo_url) {
+    global $conn;
+
+    if(!$conn) {
+        echo "<p>Database connection failure</p>";
+    } else {
+        $sql_table = "photo_album";
+        $query = "INSERT INTO $sql_table (
+            photo_name,
+            photo_description,
+            photo_date,
+            keywords,
+            photo_url
+        ) VALUES (
+            '$name',
+            '$description',
+            '$date',
+            '$keywords',
+            '$photo_url'
+        )";
+
+        $result = mysqli_query($conn, $query);
+        if ($result) {
+            echo "<p>The photo was successfully uploaded!</p>";
+        } else {
+            echo "<p>There was an error with saving data</p>";
+        }
+    }
+
+}
+
+function sanitise_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
 
 if(isset($_FILES['file'])) {
 
     $file = $_FILES['file'];
-
-    //file details
+    $description = $_POST['photo_description'];
+    $date = $_POST['photo_date'];
+    $keywords = $_POST['photo_keywords'];
     $name = $file['name'];
-    $tmp_name = $file['tmp_name'];
+    $photo_url .= $name;
 
+    $description = sanitise_input($description);
+    $keywords = sanitise_input($keywords);
+
+    createTable();
+    saveData($name, $description, $date, $keywords, $photo_url);
+
+    //file details    
+    $tmp_name = $file['tmp_name'];
     $extension = explode('.', $name);
     $extension = strtolower(end($extension));
 
