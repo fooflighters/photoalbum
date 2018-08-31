@@ -22,7 +22,20 @@ $objects = $s3->getIterator('ListObjects', [
     <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 <body>
-    <?php include('menu.php'); ?>
+    <?php 
+
+    include('menu.php'); 
+
+    if(isset($_GET['delete'])) {
+        $photoKey = $_GET['photoKey'];      
+        $result = $s3->deleteMatchingObjects($config['s3']['bucket'], $photoKey);    
+        if($result) {
+            echo "delete success";
+        }    
+   
+    }
+
+    ?>
 
     <div class="section">
         <div class="container">
@@ -34,13 +47,15 @@ $objects = $s3->getIterator('ListObjects', [
                     <tr>
                         <th>File</th>
                         <th>View</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($objects as $object): ?> 
                     <tr>
                         <td><?php echo $object['Key']; ?></td>
-                        <td><a href="<?php echo $s3->getObjectUrl($config['s3']['bucket'], $object['Key']); ?>">View</td>
+                        <td><a href="<?php echo $s3->getObjectUrl($config['s3']['bucket'], $object['Key']); ?>" class="btn">View</a></td>
+                        <td><a href="viewbucket.php?photoKey=<?php echo $object['Key'];?>&delete=true" class="btn">Delete</button></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -49,6 +64,8 @@ $objects = $s3->getIterator('ListObjects', [
         </div>
     </div>
     <br><br>
+
+    <?php include('footer.php'); ?>
     <!--  Scripts-->
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="js/materialize.js"></script>

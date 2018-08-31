@@ -1,4 +1,5 @@
 <?php
+use Aws\S3\Exception\S3Exception;
 
 require 'app/start.php';
 
@@ -27,7 +28,7 @@ $objects = $s3->getIterator('ListObjects', [
     <div class="section">
         <div class="container">
             <h1 class="header center grey-text text-darken-2">Photo Retriever</h1>
-
+            <br>
             <?php 
 
             require_once 'app/database_settings.php';   //database settings
@@ -42,7 +43,7 @@ $objects = $s3->getIterator('ListObjects', [
                 if(!$result) {
                     echo "<p>There was something wrong with the query</p>";
                 } else {
-                    echo "<table id=\"display_all\">\n";
+                    echo "<table>\n";
                     echo "<tr>\n"
                         ."<th scope=\"col\">Photo Name</th>\n"
                         ."<th scope=\"col\">Photo Description</th>\n"
@@ -112,17 +113,14 @@ $objects = $s3->getIterator('ListObjects', [
 
             if(isset($_POST['search_keywords'])) {
                 $query_photo_keywords = $_POST['query_photo_keywords'];
-                $query = "SELECT * FROM photo_album";
+                $query = "SELECT photo_name, photo_description, photo_date, photo_url FROM photo_album WHERE keywords LIKE '%$query_photo_keywords%'";
                 $result = mysqli_query($conn, $query); 
-                while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<p>",$row['keywords'],"</p>";
-                }
-                
+                showTable();                       
             }
 
             ?>   
                      
-            <br>
+            <br><br>
             <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                 <fieldset>
                     <div class="input-field">
