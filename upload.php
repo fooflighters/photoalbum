@@ -12,16 +12,8 @@
     <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 <body>
-    <nav class="green darken-2">
-        <div class="nav-wrapper container">
-            <ul class="left">
-                <li><a href="getphoto.php">Get photo</a></li>
-            </ul>
-            <ul class="right">
-                <li>Phu Dao 101335460</li>
-            </ul>            
-        </div>
-    </nav>
+
+    <?php include('menu.php'); ?>
 
     <div class="section">
         <div class="container">
@@ -107,6 +99,9 @@ function createTable() {
     }       
 }
 
+/*
+* Saves data of the photo to database
+*/
 function saveData($name, $description, $date, $keywords, $photo_url) {
     global $conn;
 
@@ -131,13 +126,18 @@ function saveData($name, $description, $date, $keywords, $photo_url) {
         $result = mysqli_query($conn, $query);
         if ($result) {
             echo "<p>The photo was successfully uploaded!</p>";
+            return true;
         } else {
             echo "<p>There was an error with saving data</p>";
+            return false;
         }
     }
 
 }
 
+/*
+* Removes special characters from data
+*/
 function sanitise_input($data) {
     $data = trim($data);
     $data = stripslashes($data);
@@ -147,7 +147,7 @@ function sanitise_input($data) {
 
 
 if(isset($_FILES['file'])) {
-
+    //get photo details
     $file = $_FILES['file'];
     $description = $_POST['photo_description'];
     $date = $_POST['photo_date'];
@@ -159,7 +159,6 @@ if(isset($_FILES['file'])) {
     $keywords = sanitise_input($keywords);
 
     createTable();
-    saveData($name, $description, $date, $keywords, $photo_url);
 
     //file details    
     $tmp_name = $file['tmp_name'];
@@ -186,12 +185,22 @@ if(isset($_FILES['file'])) {
         //remove the file
         unlink($tmp_file_path);
 
+        //save to database
+        if(saveData($name, $description, $date, $keywords, $photo_url)) {
+            header('Location: uploadsuccess.php');
+        } else {
+            echo "Error uploading photo";
+        }
+
     } catch(S3Exception $e) {
         die($e);
     }
 }
 
 ?>
+<br><br>
+
+<?php include('footer.php'); ?>
 
 </body>
 </html>
