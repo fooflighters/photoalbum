@@ -2,9 +2,9 @@
 
 return [
 	's3' => [
-		'key' => 'AKIAJIB7MTAUFADV26UQ',
-		'secret' => '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',
-		'bucket' => 'prescriptionprogrammer'
+		'key' => 'AKIAIU4S25TPDLYMDF7A',
+		'secret' => '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',
+		'bucket' => 'fooflighters'
 	]
 ];
 

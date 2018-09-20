@@ -62,7 +62,7 @@ use Aws\S3\Exception\S3Exception;
 require 'app/start.php';
 require_once 'app/database_settings.php';
 
-$photo_url = "https://s3-ap-southeast-2.amazonaws.com/prescriptionprogrammer/"; //this is url of the s3 bucket
+$photo_url = "https://s3-ap-southeast-2.amazonaws.com/fooflighters/"; //this is url of the s3 bucket
 
 //connect to mysql database
 $conn = @mysqli_connect($host,
@@ -179,8 +179,8 @@ if(isset($_FILES['file'])) {
         $s3->putObject([
             'Bucket' => $config['s3']['bucket'],
             'Key' => "{$name}",
-            'Body' => fopen($tmp_file_path, 'rb'),
-            'ACL' => 'public-read'
+            'Body' => fopen($tmp_file_path, 'rb')
+            //'ACL' => 'public-read'    this was removed as the s3 bucket is set to private
         ]);
 
         //remove the file
