@@ -11,17 +11,9 @@
     <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 <body>
-	<style type="text/css">
-		html, body {
-		  	height: 100%;
-		}
-		.full-height {
-			height: 100%;
-		}
-	</style>
 
 	<?php include('menu.php'); ?>
-
+	<main>
 	<div class="full-height">
 		<div class="container">
 			<br><br>
@@ -31,6 +23,7 @@
 			</div>
 		</div>
 	</div>
+	</main>
 
 
 

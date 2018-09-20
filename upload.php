@@ -14,7 +14,7 @@
 <body>
 
     <?php include('menu.php'); ?>
-
+    <main>
     <div class="section">
         <div class="container">
             <br>
@@ -48,6 +48,7 @@
             </form>
         </div>
     </div>
+    </main>
 
     <!--  Scripts-->
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>

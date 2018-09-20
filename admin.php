@@ -37,18 +37,11 @@ if(!$conn) {
 </head>
 <body>
 
-<style type="text/css">
-    html, body {
-        height: 100%;
-    }
-    .full-height {
-        height: 100%;
-    }
-</style>
 
-<?php include('menu.php'); ?>  
+<?php include('menu.php'); ?>
 
-    <div class="section full-height">
+    <main>
+    <div class="section">
         <div class="container">
             <h1 class="header center grey-text text-darken-2">Admin</h1>
             <br>
@@ -88,7 +81,7 @@ if(!$conn) {
                     <tr>
                         <td><?php echo $object['Key']; ?></td>
                         <td><a href="<?php echo $s3->getObjectUrl($config['s3']['bucket'], $object['Key']); ?>" class="btn grey darken-2">View</a></td>
-                        <td><a href="admin.php?photoKey=<?php echo $object['Key'];?>&delete=true" class="btn grey darken-2">Delete</button></td>
+                        <td><a href="admin.php?photoKey=<?php echo $object['Key'];?>&delete=true" class="btn grey darken-2">Delete</a></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -96,6 +89,7 @@ if(!$conn) {
 
         </div>
     </div>
+    </main>
     <br><br>
 
     <?php include('footer.php'); ?>
