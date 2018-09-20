@@ -1,5 +1,4 @@
 <?php
-use Aws\S3\Exception\S3Exception;
 
 require 'app/start.php';
 
@@ -28,7 +27,6 @@ $objects = $s3->getIterator('ListObjects', [
     <div class="section">
         <div class="container">
             <h1 class="header center grey-text text-darken-2">Photo Retriever</h1>
-            <br>
             <?php 
 
             require_once 'app/database_settings.php';   //database settings
@@ -41,7 +39,7 @@ $objects = $s3->getIterator('ListObjects', [
                 global $result;
                 
                 if(!$result) {
-                    echo "<p>There was something wrong with the query</p>";
+                    echo "<br><p>There was something wrong with the query</p>";
                 } else {
                     echo "<table>\n";
                     echo "<tr>\n"
@@ -62,7 +60,7 @@ $objects = $s3->getIterator('ListObjects', [
                         echo "</table>\n";
                     } else {
                         echo "<tr><td colspan=\"4\">No results found</td></tr>\n ";
-                        echo "</table>\n";                       
+                        echo "</table><br><br>";                       
                     }
                 }
 
@@ -119,8 +117,7 @@ $objects = $s3->getIterator('ListObjects', [
             }
 
             ?>   
-                     
-            <br><br>
+            <br>         
             <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                 <fieldset>
                     <div class="input-field">
