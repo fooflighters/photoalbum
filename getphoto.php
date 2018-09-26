@@ -103,8 +103,9 @@ $objects = $s3->getIterator('ListObjects', [
             }
 
             if(isset($_POST['search_date'])) {
-                $query_photo_date = $_POST['query_photo_date'];
-                $query = "SELECT photo_name, photo_description, photo_date, photo_url FROM photo_album WHERE photo_date = DATE'$query_photo_date'";
+                $query_photo_date_from = $_POST['query_photo_date_from'];
+                $query_photo_date_to = $_POST['query_photo_date_to'];
+                $query = "SELECT photo_name, photo_description, photo_date, photo_url FROM photo_album WHERE photo_date BETWEEN DATE'$query_photo_date_from' AND DATE'$query_photo_date_to'";
                 $result = mysqli_query($conn, $query); 
                 showTable();                
             }
@@ -135,8 +136,14 @@ $objects = $s3->getIterator('ListObjects', [
                         <button class="btn grey darken-2" type="submit" name="search_description">Search by Description</button>
                     </div>
                     <div class="input-field">
-                        <label>Date: </label>
-                        <input type="date" name="query_photo_date" placeholder="dd/mm/yyyy"/>
+                        <p>
+                            <label>From Date: </label>
+                            <input type="date" name="query_photo_date_from" placeholder="dd/mm/yyyy"/>
+                        </p>
+                        <p>
+                            <label>To Date: </label>
+                            <input type="date" name="query_photo_date_to" placeholder="dd/mm/yyyy"/>
+                        </p>
                         <button class="btn grey darken-2" type="submit" name="search_date">Search by Date</button>
                     </div>
                     <div class="input-field">
